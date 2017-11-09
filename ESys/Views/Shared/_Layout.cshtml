@@ -1,0 +1,199 @@
+﻿@model ESys.Models.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
+@using ESys.ViewHelper;
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 我的 ASP.NET 應用程式</title>
+    @Styles.Render("~/css")
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav navbar-nav">
+                    @*@if (Request.IsAuthenticated)
+                    {
+                       
+                        <li class = "nav-item">@Html.ActionLink("關於_Member", "Member", "Home", new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("關於_About", "About", "Home", new { @class = "nav-link" })</li>
+                    }*@
+                </ul>
+
+                @{ 
+
+                }
+                @{
+                    
+                    if (Request.IsAuthenticated)
+                    {
+                        <div class="ml-auto">
+                            <a href="#" class="btn btn-outline-info" data-toggle="modal">你好！@User.Identity.Name</a>
+                            <button type="submit" onclick="Logout()" class="btn btn-outline-info">登出</button>                  
+                        </div>
+                        <script>
+                            function Logout() {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "Account/LogOff",
+                                    success: function (data) {
+                                        window.location.reload();
+                                    }
+                                });
+                            }
+                        </script>
+                    }
+                    else
+                    {
+                        <!--Model Button-->
+                        <div class="ml-auto">
+                            @Html.ExampleShowText("寶貝我愛你")
+                            <a href="#" class="btn btn-outline-info" data-toggle="modal" data-target="#Login_Modal">登入</a>
+                            <a href="#" class="btn btn-outline-info" data-toggle="modal" data-target="#Register_Modal">註冊</a>
+                        </div>
+
+                        <!-- Login Modal -->
+                        <div class="modal fade" id="Login_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">歡迎登入</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form>
+                                        @Html.AntiForgeryToken()
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="Acc_Email">信箱</label>
+                                                <input type="email" class="form-control" id="Acc_Email" aria-describedby="emailHelp" placeholder="請輸入Email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputPassword1">密碼</label>
+                                                <input type="password" class="form-control" id="Acc_Passwd" placeholder="請輸入密碼" required>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="" class="mr-auto" data-dismiss="modal" data-toggle="modal" data-target="#Register_Modal">還沒註冊嗎？</a>
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">登入</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                        </div>
+                                    </form>
+                                    <div class="form-group container">
+                                        <hr />
+                                        @{
+                                            var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+                                            if (loginProviders.Count() == 0)
+                                            {
+                                                <div>
+                                                    <p>
+                                                        There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                                                        for details on setting up this ASP.NET application to support logging in via external services.
+                                                    </p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                using (Html.BeginForm("ExternalLogin", "Account"))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <div id="socialLoginList">
+                                                        <p>
+                                                            @foreach (AuthenticationDescription p in loginProviders)
+                                                            {
+
+                                                                <button type="submit" class="btn btn-primary text-white" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="使用 @p.Caption 帳戶登入">@p.AuthenticationType</button>
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Register Modal -->
+                        <div class="modal fade" id="Register_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">歡迎註冊</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form id="Registered">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="Acc_Email">請輸入信箱</label>
+                                                <input type="email" class="form-control" id="UserAccount" name="UserAccount" aria-describedby="emailHelp" placeholder="請輸入Email" required>
+                                                <div class="invalid-feedback">
+                                                    請輸入信箱
+                                                </div>
+                                                <small id="emailHelp" class="form-text text-muted">此信箱為之後登入的帳號</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Acc_Passwd">請輸入密碼</label>
+                                                <input type="password" class="form-control" id="Password" name="Password" placeholder="請輸入密碼" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="CAcc_Passwd">確認密碼</label>
+                                                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="請再次輸入密碼" required>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="" class="mr-auto" data-dismiss="modal" data-toggle="modal" data-target="#Login_Modal" >已有帳號，直接登入！</a>
+                                            <button type="button" class="btn btn-primary" onclick="AjaxRegistered()">註冊</button>
+                                            <script>
+                                                function AjaxRegistered() {
+                                                    var data = $('#Registered').serialize()
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        data: data,
+                                                        url: "Account/Registered",
+                                                        dataType: "json",
+                                                        success: function (result) {
+                                                            var show = "";
+                                                            $.each(result[0], function (key, val) {
+                                                                show += val;
+                                                            });
+                                                            console.log(show);
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                
+            </div>
+        </div>
+    </nav>
+
+    <!--Start RenderBody-->
+    @RenderBody()
+    <!--End RenderBody-->
+
+    @Scripts.Render("~/js")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

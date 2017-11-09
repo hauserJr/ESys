@@ -1,0 +1,14 @@
+Code First簡易說明
+
+(在套件主控台輸入指令)
+1.先建立Migrations 
+Enable-Migrations
+
+2.Initial Migrations
+Add-Migration Initial
+
+3.第一次更新資料庫
+Update-DataBase
+
+4.之後更新
+Update-DataBase -Force
