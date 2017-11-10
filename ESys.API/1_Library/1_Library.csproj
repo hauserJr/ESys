@@ -30,9 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\0_DB\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,10 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataCheckHelper.cs" />
-    <Compile Include="FormatHelper.cs" />
-    <Compile Include="SignInHelper.cs" />
+    <Compile Include="DataCheckLibrary.cs" />
+    <Compile Include="FormatLibrary.cs" />
+    <Compile Include="RsaLogic.cs" />
+    <Compile Include="SendMailLibrary.cs" />
+    <Compile Include="SignInLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\0_DB\0_DB.csproj">
+      <Project>{771b7ba8-b8dd-4904-b500-20d20da84795}</Project>
+      <Name>0_DB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

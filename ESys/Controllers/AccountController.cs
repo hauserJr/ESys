@@ -11,6 +11,9 @@ using System.Web.Mvc;
 using ESys.DB;
 using ESys.DataModels;
 using ESys.Library;
+using System.IO;
+using ESys.DataModels.DataModels;
+
 namespace ESys.Controllers
 {
     public class AccountController : Controller
@@ -33,13 +36,22 @@ namespace ESys.Controllers
         /**************************************************************************************************/
         /*******************************************Action Start*******************************************/
         /**************************************************************************************************/
-
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(Local_AccountDataModels _Local_AccountDataModels)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            var query = _db.Local_Account
+                .Where(o => o.UserAccount == _Local_AccountDataModels.UserAccount
+                 && o.Password == _Local_AccountDataModels.Password).FirstOrDefault();
+            if (query != null)
+            {
+                string Tip = query.EmailCheck ? "已開通" : "未開通";
+                var AuthManager = Request.GetOwinContext().Authentication;
+                AuthManager.SignIn(SignInLibrary.UpdateIdentity(query.UserAccount + Tip, query.Account_Guid.ToString(), "Member"));
+                return Content("true");
+            }
+            return Content("false") ;
         }
 
         // POST: /Account/Registered
@@ -50,17 +62,18 @@ namespace ESys.Controllers
             //return 
             Dictionary<string, string> _JsonDictionary = new Dictionary<string, string>();
 
-            var EmailCheck = DataCheckLibrary.IsValidEMailAddress(_RegisteredDM.UserAccount);
-            var ReCheckPassword = DataCheckLibrary.RecheckPassword(_RegisteredDM.Password, _RegisteredDM.ConfirmPassword,8);
-            if (EmailCheck.ContainsKey(false))
+            var ValidEMail = DataCheckLibrary.IsValidEMailAddress(_RegisteredDM.UserAccount);
+            var RecheckPwd = DataCheckLibrary.RecheckPassword(_RegisteredDM.Password, _RegisteredDM.ConfirmPassword,8);
+            if (ValidEMail.ContainsKey(true))
             {
-                _JsonDictionary.Add("Email", EmailCheck[false]);
+                _JsonDictionary.Add("Mail", ValidEMail[true]);
             }
-            if (ReCheckPassword.ContainsKey(false))
+            if (RecheckPwd.ContainsKey(true))
             {
-                _JsonDictionary.Add("Pwd", ReCheckPassword[false]);
+                _JsonDictionary.Add("Pwd", RecheckPwd[true]);
             }
 
+            #region 判斷是否有錯誤訊息
             if (_JsonDictionary.Count > 0)
             {
                 var FormatJson = FormatLibrary.DictionaryToJson(_JsonDictionary);
@@ -68,16 +81,35 @@ namespace ESys.Controllers
             }
             else
             {
+                _RegisteredDM.Account_Guid = Guid.NewGuid();
                 _db.Local_Account.Add(new Local_Account
                 {
                     Account_Guid = _RegisteredDM.Account_Guid,
                     UserAccount = _RegisteredDM.UserAccount,
                     Password = _RegisteredDM.Password,
-                    EmailCheck = false
+                    EmailCheck = false,
+                    CreateDateTime = System.DateTime.Now
                 });
                 _db.SaveChanges();
+                string HtmlTemp = string.Empty;
+                try
+                {
+                    using (StreamReader _StreamReader = new StreamReader(System.AppDomain.CurrentDomain.BaseDirectory + "/Temp/mail_temp.html"))
+                    {
+                        HtmlTemp = _StreamReader.ReadToEnd();
+                        HtmlTemp = HtmlTemp.Replace("【CodeReplace】", RsaLogic.EMailEncryLogic(_RegisteredDM.Account_Guid.ToString()));
+                        SendMailLibrary.RealTimeSendMail(HtmlTemp,"歡迎註冊");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //
+                }
             }
-            return Content("");
+            #endregion
+            _JsonDictionary.Add("Reg","註冊成功，請至信箱開通。");
+            var Reg_FormatJson = FormatLibrary.DictionaryToJson(_JsonDictionary);
+            return Content(Reg_FormatJson, JsonContentType);
         }
 
         #region 登出

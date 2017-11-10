@@ -15,6 +15,7 @@ namespace ESys.DB
         public virtual DbSet<FB_Account> FB_Account { get; set; }
         public virtual DbSet<Local_Account> Local_Account { get; set; }
         public virtual DbSet<MemberType> MemberType { get; set; }
+        public virtual DbSet<RSA_Key> RSA_Key { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }

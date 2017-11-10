@@ -6,25 +6,20 @@ namespace ESys.DB
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Local_Account
+    public partial class RSA_Key
     {
         [Key]
         [Column(Order = 0)]
-        public Guid Account_Guid { get; set; }
+        public Guid RSA_Guid { get; set; }
 
         [Column(Order = 1)]
-        [StringLength(50)]
-        public string UserAccount { get; set; }
+        public string PublicKey { get; set; }
 
         [Column(Order = 2)]
-        [StringLength(50)]
-        public string Password { get; set; }
+        public string PrivateKey { get; set; }
 
         [Column(Order = 3)]
-        public bool EmailCheck { get; set; }
-
-        [Column(Order = 4)]
-        public DateTime CreateDateTime { get; set; }
+        public string RSA_Type { get; set; }
 
     }
 }

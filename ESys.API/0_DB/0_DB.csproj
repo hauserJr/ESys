@@ -50,6 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ESys_DB.cs" />
+    <Compile Include="Migrations\201711100531052_CreateTable[RSA_Key].cs" />
+    <Compile Include="Migrations\201711100531052_CreateTable[RSA_Key].Designer.cs">
+      <DependentUpon>201711100531052_CreateTable[RSA_Key].cs</DependentUpon>
+    </Compile>
+    <Compile Include="RSA_Key.cs" />
     <Compile Include="MemberType.cs" />
     <Compile Include="FB_Account.cs" />
     <Compile Include="Local_Account.cs" />
@@ -60,6 +65,10 @@
     <Compile Include="Migrations\201711090925306_UpdateTable[Local_Account].cs" />
     <Compile Include="Migrations\201711090925306_UpdateTable[Local_Account].Designer.cs">
       <DependentUpon>201711090925306_UpdateTable[Local_Account].cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711100515417_AddColumn[Local_Account].cs" />
+    <Compile Include="Migrations\201711100515417_AddColumn[Local_Account].Designer.cs">
+      <DependentUpon>201711100515417_AddColumn[Local_Account].cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +83,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711090925306_UpdateTable[Local_Account].resx">
       <DependentUpon>201711090925306_UpdateTable[Local_Account].cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711100515417_AddColumn[Local_Account].resx">
+      <DependentUpon>201711100515417_AddColumn[Local_Account].cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711100531052_CreateTable[RSA_Key].resx">
+      <DependentUpon>201711100531052_CreateTable[RSA_Key].cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

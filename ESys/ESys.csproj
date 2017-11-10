@@ -186,6 +186,8 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\ResultPage\ResultPageController.cs" />
+    <Compile Include="Controllers\Verify\VerifyController.cs" />
     <Compile Include="Models\_Identity\AccountViewModels.cs" />
     <Compile Include="Models\_Identity\IdentityModels.cs" />
     <Compile Include="Models\_Identity\ManageViewModels.cs" />
@@ -240,6 +242,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
+    <Content Include="Views\Verify\VerifyAccount.cshtml" />
+    <Content Include="Views\ResultPage\FinishRegistered.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

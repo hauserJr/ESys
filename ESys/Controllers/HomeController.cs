@@ -13,13 +13,13 @@ namespace ESys.Controllers
         {
             return View();
         }
-        [Authorize(Roles = "Member")]
-        public ActionResult Member()
+        [AllowAnonymous]
+        public ActionResult Admin()
         {
             return View();
         }
         [Authorize(Roles = "Admin")]
-        public ActionResult Admin()
+        public ActionResult About()
         {
             return View();
         }

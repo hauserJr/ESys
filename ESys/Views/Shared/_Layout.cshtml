@@ -28,12 +28,10 @@
                         <li class="nav-item">@Html.ActionLink("關於_About", "About", "Home", new { @class = "nav-link" })</li>
                     }*@
                 </ul>
-
                 @{ 
 
                 }
                 @{
-                    
                     if (Request.IsAuthenticated)
                     {
                         <div class="ml-auto">
@@ -71,24 +69,47 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <form>
+                                    <form id="LoginForm">
                                         @Html.AntiForgeryToken()
                                         <div class="modal-body">
+                                            <div id="altMeg" class="alert alert-danger" role="alert" aria-label="Close" style="display: none;">
+                                               <p id="altMegText"></p>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="Acc_Email">信箱</label>
-                                                <input type="email" class="form-control" id="Acc_Email" aria-describedby="emailHelp" placeholder="請輸入Email" required>
+                                                <input type="email" class="form-control" id="UserAccount" name="UserAccount" aria-describedby="emailHelp" placeholder="請輸入Email" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputPassword1">密碼</label>
-                                                <input type="password" class="form-control" id="Acc_Passwd" placeholder="請輸入密碼" required>
+                                                <input type="password" class="form-control" id="Password" name="Password" placeholder="請輸入密碼" required>
                                             </div>
 
                                         </div>
                                         <div class="modal-footer">
                                             <a href="" class="mr-auto" data-dismiss="modal" data-toggle="modal" data-target="#Register_Modal">還沒註冊嗎？</a>
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">登入</button>
+                                            <button type="button" class="btn btn-primary" onclick="AjaxLogin()">登入</button>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
                                         </div>
+                                        <script>
+                                            function AjaxLogin() {
+                                                var data = $('#LoginForm').serialize()
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    data: data,
+                                                    url: "Account/Login",
+                                                    dataType: "json",
+                                                    success: function (result) {
+                                                        if (result) {
+                                                            window.location.reload();
+                                                        }
+                                                        else {
+                                                            $('#altMegText').text("帳號錯誤！")
+                                                            $('#altMeg').show()
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        </script>
                                     </form>
                                     <div class="form-group container">
                                         <hr />
@@ -137,6 +158,9 @@
                                     </div>
                                     <form id="Registered">
                                         <div class="modal-body">
+                                            <div id="altRegMeg" class="alert alert-danger" role="alert" aria-label="Close" style="display: none;">
+                                                <div id="altRegMegText"></div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="Acc_Email">請輸入信箱</label>
                                                 <input type="email" class="form-control" id="UserAccount" name="UserAccount" aria-describedby="emailHelp" placeholder="請輸入Email" required>
@@ -159,6 +183,7 @@
                                             <a href="" class="mr-auto" data-dismiss="modal" data-toggle="modal" data-target="#Login_Modal" >已有帳號，直接登入！</a>
                                             <button type="button" class="btn btn-primary" onclick="AjaxRegistered()">註冊</button>
                                             <script>
+ 
                                                 function AjaxRegistered() {
                                                     var data = $('#Registered').serialize()
                                                     $.ajax({
@@ -167,11 +192,24 @@
                                                         url: "Account/Registered",
                                                         dataType: "json",
                                                         success: function (result) {
-                                                            var show = "";
+                                                            var show = [];
                                                             $.each(result[0], function (key, val) {
-                                                                show += val;
+                                                                if (key != "Reg"){
+                                                                    show.push(val)
+                                                                }
+                                                                else {
+                                                                    $('#Meg').text(val);
+                                                                    $('#Register_Modal').modal('hide')
+                                                                    $('#Message_Modal').modal('show')
+                                                                }
                                                             });
-                                                            console.log(show);
+                                                            if (show.length != 0) {
+                                                                $('#altRegMegText').html(show.join("<p>"));
+                                                                $('#altRegMeg').show();
+                                                            }
+                                                            $('#Message_Modal').on('hidden.bs.modal', function (e) {
+                                                                window.location.reload();
+                                                            });
                                                         }
                                                     });
                                                 }
@@ -183,8 +221,7 @@
                             </div>
                         </div>
                     }
-                }
-                
+                }               
             </div>
         </div>
     </nav>
@@ -193,7 +230,30 @@
     @RenderBody()
     <!--End RenderBody-->
 
+    <!-- Message Modal -->
+    <div class="modal fade" id="Message_Modal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white" id="exampleModalLabel">訊息提醒</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="Meg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     @Scripts.Render("~/js")
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
