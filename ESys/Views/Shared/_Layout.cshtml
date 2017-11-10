@@ -42,7 +42,7 @@
                             function Logout() {
                                 $.ajax({
                                     type: 'POST',
-                                    url: "Account/LogOff",
+                                    url: "../Account/LogOff",
                                     success: function (data) {
                                         window.location.reload();
                                     }
@@ -96,11 +96,11 @@
                                                 $.ajax({
                                                     type: 'POST',
                                                     data: data,
-                                                    url: "Account/Login",
+                                                    url: "../Account/Login",
                                                     dataType: "json",
                                                     success: function (result) {
                                                         if (result) {
-                                                            window.location.reload();
+                                                            location.href = "../Home/Index"
                                                         }
                                                         else {
                                                             $('#altMegText').text("帳號錯誤！")

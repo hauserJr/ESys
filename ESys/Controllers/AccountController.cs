@@ -98,7 +98,7 @@ namespace ESys.Controllers
                     {
                         HtmlTemp = _StreamReader.ReadToEnd();
                         HtmlTemp = HtmlTemp.Replace("【CodeReplace】", RsaLogic.EMailEncryLogic(_RegisteredDM.Account_Guid.ToString()));
-                        SendMailLibrary.RealTimeSendMail(HtmlTemp,"歡迎註冊");
+                        SendMailLibrary.RealTimeSendMail(HtmlTemp,"歡迎註冊", _RegisteredDM.UserAccount);
                     }
                 }
                 catch (Exception ex)

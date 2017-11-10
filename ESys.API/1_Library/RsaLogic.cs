@@ -34,10 +34,18 @@ namespace ESys.Library
             var query = _db.RSA_Key.Where(o => o.RSA_Type == "EMail").Select(o => o.PrivateKey).FirstOrDefault();
             if (query.Any())
             {
-                _RSA.FromXmlString(query);
-                byte[] bytes = Convert.FromBase64String(DecryptString);
-                DecryptString = Encoding.UTF8.GetString(bytes);
-                DecryptBase64 = Encoding.UTF8.GetString(_RSA.Decrypt(Convert.FromBase64String(DecryptString), false));
+                try
+                {
+                    _RSA.FromXmlString(query);
+                    byte[] bytes = Convert.FromBase64String(DecryptString);
+                    DecryptString = Encoding.UTF8.GetString(bytes);
+                    DecryptBase64 = Encoding.UTF8.GetString(_RSA.Decrypt(Convert.FromBase64String(DecryptString), false));
+                }
+                catch 
+                {
+                    return "";
+                }
+                
             }
             return DecryptBase64;
         }

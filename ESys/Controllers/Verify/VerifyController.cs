@@ -17,13 +17,28 @@ namespace ESys.Controllers.Verity
         // GET: Verify
         public ActionResult VerifyAccount(string CodeStr)
         {
-            Guid Account_Guid = Guid.Parse(RsaLogic.EMailDecryLogic(CodeStr));
-            var query = _db.Local_Account.Where(o => o.Account_Guid == Account_Guid);
-            if (query.Any())
+            string Meg = "驗證失敗，請重新註冊！";
+            string VerifyResult = RsaLogic.EMailDecryLogic(CodeStr);
+            if (!string.IsNullOrEmpty(VerifyResult))
             {
-                query.FirstOrDefault().EmailCheck = true;
-            }
+                Guid Account_Guid = Guid.Parse(VerifyResult);
+                string Message = string.Empty;
+                var query = _db.Local_Account.Where(o => o.Account_Guid == Account_Guid && o.EmailCheck == false);
+                if (query.Any())
+                {
+                    try
+                    {
+                        query.FirstOrDefault().EmailCheck = true;
+                        _db.SaveChanges();
+                        Meg = "驗證成功，請進行登入！";
+                    }
+                    catch
+                    {
 
+                    }                   
+                }            
+            }
+            ViewBag.Meg = Meg;
             _db.SaveChanges();
             return View();
         }

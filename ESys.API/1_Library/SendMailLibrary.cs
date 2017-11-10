@@ -1,23 +1,16 @@
 ﻿using ESys.DB;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
 
 namespace ESys.Library
 {
     public class SendMailLibrary
     {
         private static ESys_DBContext _db = new ESys_DBContext();
-        public static void RealTimeSendMail(string HtmlTemp,string HtmlTitle)
+        public static void RealTimeSendMail(string HtmlTemp,string HtmlTitle,string MailTo)
         {
             MailMessage msg = new MailMessage();
-            msg.To.Add(string.Join(",", "free576002@gmail.com"));
+            msg.To.Add(string.Join(",", MailTo));
             msg.From = new MailAddress("free576002@gmail.com", "測試郵件", System.Text.Encoding.UTF8);
             //郵件標題 
             msg.Subject = HtmlTitle;
