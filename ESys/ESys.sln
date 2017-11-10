@@ -14,9 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{ABCE34F8-D973-4AB5-AA5D-2EA2928F28C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ESys.API", "ESys.API", "{E2E5F922-A5F8-4B04-86D9-2B88B8FAB516}"
-	ProjectSection(SolutionItems) = preProject
-		CodeFirst使用說明.txt = CodeFirst使用說明.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "0_DB", "..\ESys.API\0_DB\0_DB.csproj", "{771B7BA8-B8DD-4904-B500-20D20DA84795}"
 EndProject
