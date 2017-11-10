@@ -13,6 +13,7 @@ namespace ESys.Controllers.Verity
     public class VerifyController : Controller
     {
         private ESys_DBContext _db = new ESys_DBContext();
+
         [AllowAnonymous]
         // GET: Verify
         public ActionResult VerifyAccount(string CodeStr)
