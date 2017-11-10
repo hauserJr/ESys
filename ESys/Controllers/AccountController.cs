@@ -81,6 +81,7 @@ namespace ESys.Controllers
             }
             else
             {
+                //沒有錯誤訊息就將使用者註冊資訊存入資料庫
                 _RegisteredDM.Account_Guid = Guid.NewGuid();
                 _db.Local_Account.Add(new Local_Account
                 {
